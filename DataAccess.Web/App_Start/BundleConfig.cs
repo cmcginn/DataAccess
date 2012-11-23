@@ -46,6 +46,9 @@ namespace DataAccess.Web
             bundles.Add(new StyleBundle("~/Content/themes/smoothness").Include(
                     "~/Content/themes/smoothness/css/smoothness/*.css"
                 ));
+            bundles.Add(new StyleBundle("~/Content/yaml").Include(
+                    "~/Content/yaml/core/base.css"
+                ));
         }
     }
 }

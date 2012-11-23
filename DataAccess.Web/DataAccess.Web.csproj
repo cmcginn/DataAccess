@@ -40,12 +40,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Raven.Abstractions">
-      <HintPath>..\packages\RavenDB.Client.2.0.2157-Unstable\lib\net40\Raven.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Raven.Client.Lightweight">
-      <HintPath>..\packages\RavenDB.Client.2.0.2157-Unstable\lib\net40\Raven.Client.Lightweight.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
@@ -167,6 +161,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\CommonController.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -254,6 +249,55 @@
     <Content Include="Content\themes\smoothness\js\jquery-1.8.2.js" />
     <Content Include="Content\themes\smoothness\js\jquery-ui-1.9.0.custom.js" />
     <Content Include="Content\themes\smoothness\js\jquery-ui-1.9.0.custom.min.js" />
+    <Content Include="Content\yaml\add-ons\accessible-tabs\jquery.tabs.js" />
+    <Content Include="Content\yaml\add-ons\accessible-tabs\tabs.css" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\external_link.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\hcalendar.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\hcard.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\icon-geo.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\icon-hatom.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\icon-haudio.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\icon-hcalendar-add.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\icon-hcalendar-download.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\icon-hcalendar.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\icon-hcard-add.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\icon-hcard-download.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\icon-hcard.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\icon-hresume.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\icon-rel-tag.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\icon-xfn.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\xfn\xfn-child.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\xfn\xfn-colleague-met.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\xfn\xfn-colleague.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\xfn\xfn-friend-met.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\xfn\xfn-friend.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\xfn\xfn-me.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\xfn\xfn-parent.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\xfn\xfn-small.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\xfn\xfn-spouse.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\xfn\xfn-sweetheart-met.png" />
+    <Content Include="Content\yaml\add-ons\microformats\icons\xfn\xfn-sweetheart.png" />
+    <Content Include="Content\yaml\add-ons\microformats\microformats.css" />
+    <Content Include="Content\yaml\add-ons\rtl-support\core\base-rtl.css" />
+    <Content Include="Content\yaml\add-ons\rtl-support\core\base-rtl.min.css" />
+    <Content Include="Content\yaml\add-ons\rtl-support\navigation\hlist-rtl.css" />
+    <Content Include="Content\yaml\add-ons\rtl-support\navigation\vlist-rtl.css" />
+    <Content Include="Content\yaml\add-ons\rtl-support\screen\typography-rtl.css" />
+    <Content Include="Content\yaml\add-ons\syncheight\jquery.syncheight.js" />
+    <Content Include="Content\yaml\core\base.css" />
+    <Content Include="Content\yaml\core\base.min.css" />
+    <Content Include="Content\yaml\core\iehacks.css" />
+    <Content Include="Content\yaml\core\iehacks.min.css" />
+    <Content Include="Content\yaml\core\js\yaml-focusfix.js" />
+    <Content Include="Content\yaml\forms\gray-theme.css" />
+    <Content Include="Content\yaml\navigation\hlist.css" />
+    <Content Include="Content\yaml\navigation\vlist.css" />
+    <Content Include="Content\yaml\print\print.css" />
+    <Content Include="Content\yaml\screen\grid-960-12.css" />
+    <Content Include="Content\yaml\screen\grid-960-16.css" />
+    <Content Include="Content\yaml\screen\screen-FULLPAGE-layout.css" />
+    <Content Include="Content\yaml\screen\screen-PAGE-layout.css" />
+    <Content Include="Content\yaml\screen\typography.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
@@ -323,6 +367,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataAccess.Core\DataAccess.Core.csproj">
+      <Project>{443d3247-f1e8-4843-91fb-0fb8e660d42f}</Project>
+      <Name>DataAccess.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataAccess.Raven\DataAccess.Raven.csproj">
+      <Project>{64a87931-7978-41ad-a0f8-04daf88a6bd3}</Project>
+      <Name>DataAccess.Raven</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
