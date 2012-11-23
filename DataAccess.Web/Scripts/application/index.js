@@ -2,11 +2,16 @@
     self = this;
     self.id = id;
     self.name = name;
+    
 }
-function City(id, name) {
+function City(id, name, selected,cb) {
     self = this;
     self.id = id;
     self.name = name;
+    self.selected = ko.observable(selected);
+    self.selected.subscribe(function (newValue) {
+        cb(self);
+    });
 }
 var index = {
     /*---------------------Data Access-----------------------*/
@@ -29,19 +34,18 @@ var index = {
             dataType: 'json',
             data: { query: 'Code:'+state.id()+'/*'},
             success: function (data, textStatus, jqXHR) {
-                var cities = [];
-                $(data).each(function () {
-                    cities.push(new City(this.Code,this.Name));
-                });
                 
-                state.cities(cities);
+                $(data).each(function () {
+                    state.cities().push(ko.observable(new City(this.Id, this.Name, this.Selected, index.citySelected)));
+                });
                 cb();
             }
         })
     },
     /*---------------------Models-----------------------*/
             dataModel:{
-            States: []
+                States: [],
+                CityChanged: function (item) { console.log('here'); }
             },
         stateSelected:function(item){           
             index.getCities(item, function () {
@@ -50,13 +54,21 @@ var index = {
                 node.height('100%');
             });
         },
+        citySelected:function(item){
+            $.ajax({
+                type: 'POST',
+                url: '/api/common/SaveCity',
+                dataType: 'json',
+                data: { id: item.id, selected: item.selected }
+            });
+        },
         mapping: {
             'States': {
                 'create': function (options) {
                 
                     var item = {
                         name: ko.observable(options.data.Name),
-                        id: ko.observable(options.data.Code),
+                        id: ko.observable(options.data.Id),
                         cities: ko.observable([]),
                         selected: function (e) {
                             index.stateSelected(e);

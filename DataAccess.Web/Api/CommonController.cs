@@ -1,6 +1,7 @@
 ﻿using DataAccess.Core.Domain;
 using DataAccess.Core.Services;
 using DataAccess.Raven.Services;
+using DataAccess.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,15 @@ namespace DataAccess.Web.Api
     {
         IDataService _dataService = new RavenDataService();
         [AcceptVerbs("GET", "HEAD")]
-        public List<Location> QueryLocations(string query)
+        public List<SelectItem> QueryLocations(string query)
         {
-            return _dataService.QueryLocations(query);
+            var results = _dataService.QueryLocations(query).Select(x => new SelectItem { Id = x.Code, Name = x.Name, Selected = false });
+            return results.ToList();
+        }
+        [AcceptVerbs("POST")]
+        public void SaveCity(SelectItem city)
+        {
+            var x = city;
         }
     }
 }

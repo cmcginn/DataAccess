@@ -8,6 +8,6 @@ namespace DataAccess.Core.Domain
     public class KeyValue
     {
         public virtual string Key { get; set; }
-        public virtual string Value { get; set; }
+        public virtual object Value { get; set; }
     }
 }
