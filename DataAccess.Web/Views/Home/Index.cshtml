@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@section scripts
+{
+    <script src="~/Scripts/application/index.js"></script>
+}
+
+<script id="states-template" type="text/html">
+    <div data-bind="foreach:States">
+        <div class="state" data-bind="click:selected">
+            <h1><span style="padding-left: 15px" data-bind="text:name"></span></h1>
+            <div>
+                <div data-bind="foreach:cities">
+                    <span data-bind="text:name"></span>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+</script>
+
+<div id="states" data-bind="template:{name:'states-template'}"></div>
