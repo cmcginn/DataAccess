@@ -1,6 +1,6 @@
 ﻿using DataAccess.Core.Domain;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Raven.Imports.Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,23 +10,37 @@ namespace DataAccess.Core.Extensions
 {
     public static class DataExtensions
     {
-        public static T GetProperty<T>(this UserSession userSession,string key)
+        public static void SetProperty<T>(this UserSession userSession, string key, T value)
         {
-            T result = default(T);
-           
-            var jObj = JsonConvert.DeserializeObject<JObject>(userSession.Data);
-            JToken i;
-            if (jObj.TryGetValue(key, out i))
-                result = i.Value<T>();
-            return (T)result;
+            var obj = JsonConvert.DeserializeObject<JObject>(userSession.Data);
+            obj.Remove(key);
+            var objectValue = JsonConvert.SerializeObject(value);
+            obj.Add(new JProperty(key, objectValue));
+            userSession.Data = JsonConvert.SerializeObject(obj);
         }
 
-        public static void SetProperty(this UserSession userSession,string key, JToken value)
+        public static T GetProperty<T>(this UserSession userSession, string key)
         {
-            var result = false;
-            var jObj = JsonConvert.DeserializeObject<JObject>(userSession.Data);
-            jObj.Property(key).Value = value;
-            userSession.Data = jObj.ToString();
+            T result = default(T);
+            var obj = JObject.Parse(userSession.Data);
+            var item = obj.SelectToken(key);
+            if (item != null)
+            {
+                result = JsonConvert.DeserializeObject<T>(item.ToString());
+            }
+            return result;
+        }
+
+        public static string UniqueName(this List<string> names, string prefix)
+        {
+            int counter = 1;
+            string uniqueName = prefix;
+            while (names.Where(x => x.ToLower() == uniqueName.ToLower()).Count() > 0)
+            {
+                uniqueName = String.Format("{0} {1}", uniqueName, counter);
+                counter++;
+            }
+            return uniqueName;
         }
     }
 }

@@ -9,6 +9,7 @@ namespace DataAccess.Core.Domain
 {
     public class UserSession:BaseEntity
     {
+        public virtual string UserId { get; set; }
         public virtual string Data { get; set; }
     }
 }

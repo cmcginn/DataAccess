@@ -5,9 +5,10 @@ using System.Text;
 
 namespace DataAccess.Core.Domain
 {
-    public class KeyValue
+    [Serializable]
+    public class KeyValue<T>
     {
         public virtual string Key { get; set; }
-        public virtual object Value { get; set; }
+        public virtual T Value { get; set; }
     }
 }
