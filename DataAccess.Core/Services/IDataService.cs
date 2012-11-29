@@ -1,4 +1,5 @@
 ﻿using DataAccess.Core.Domain;
+using Raven.Client;
 using Raven.Client.Linq;
 using System;
 using System.Collections.Generic;
@@ -9,12 +10,16 @@ namespace DataAccess.Core.Services
 {
     public interface IDataService
     {
-        List<Location> QueryLocations(string query);
-        ProfileQuery CreateProfileQuery(string userId);
-        ProfileQuery GetProfileQuery(string profileQueryId);
-        void SaveProfileQuery(ProfileQuery query);
-        UserSession GetUserSession(string userSessionId);
-        void SaveUserSession(UserSession userSession);
+
+        #region Locations
         IQueryable<Location> Locations();
+        Location Location(string code);
+        #endregion
+        #region Profile Queries
+        IQueryable<ProfileQuery> ProfileQueries();
+        ProfileQuery ProfileQuery(string id);
+        void SaveProfileQuery(ProfileQuery profileQuery);
+        void DeleteProfileQuery(string id);
+        #endregion
     }
 }

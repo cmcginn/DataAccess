@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Indexes\LocationsByCodeIndex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\RavenDataService.cs" />
   </ItemGroup>

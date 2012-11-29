@@ -25,16 +25,7 @@ namespace DataAccess.Raven.Services
 
 
         #region ProfileQueries
-        public IQueryable<ProfileQuery> ProfileQueries(string userId)
-        {
-            using (var documentStore = GetDocumentStore())
-            {
-                using (var session = documentStore.OpenSession())
-                {
-                    return session.Query<ProfileQuery>().Where(x => x.UserId == userId);
-                }
-            }
-        }
+
         #endregion
 
         #region Locations
@@ -44,97 +35,43 @@ namespace DataAccess.Raven.Services
 
             var session = documentStore.OpenSession();
 
-            return session.Query<Location>();
+            return session.Query<Location>("LocationsByCodeIndex");
 
-            // }
-            //using (var documentStore = GetDocumentStore())
-            //{
-            //    using (var session = documentStore.OpenSession())
-            //    {
-            //        return session.Query<Location>();
-            //    }
-            //}
         }
 
+        public Location Location(string code)
+        {
+            var documentStore = GetDocumentStore();
+            var session = documentStore.OpenSession();
+            return session.Advanced.LuceneQuery<Location>().WhereEquals("Code", code).Single();
+        }
         #endregion
 
-        public List<Core.Domain.Location> QueryLocations(string query)
+        #region Profile Queries
+        public IQueryable<ProfileQuery> ProfileQueries()
         {
-            using (var documentStore = GetDocumentStore())
-            {
-                using (var session = documentStore.OpenSession())
-                {
-                    var results = session.Advanced.LuceneQuery<Location>().Where(query);
-                    return results.ToList();
-                }
-            }
+            throw new NotImplementedException();
         }
 
-
-        public ProfileQuery CreateProfileQuery(string userId)
+        public ProfileQuery ProfileQuery(string id)
         {
-            ProfileQuery result = null;
-            using (var documentStore = GetDocumentStore())
-            {
-                using (var session = documentStore.OpenSession())
-                {
-                    //get list of names
-                    var existingQueryNames = session.Advanced.LuceneQuery<ProfileQuery>().WhereEquals("UserId", _workContext.CurrentUserId).Select(x => x.Name).ToList();
-                    var uniqueName = existingQueryNames.UniqueName("New Search");
-                    result = new ProfileQuery { UserId = _workContext.CurrentUserId, Name = uniqueName, LocationIds = new List<string>() };
-                    session.Store(result);
-                    session.SaveChanges();
-                }
-            }
-            return result;
+            throw new NotImplementedException();
         }
 
-        public void SaveProfileQuery(ProfileQuery query)
+        public void DeleteProfileQuery(string id)
         {
-            using (var documentStore = GetDocumentStore())
-            {
-                using (var session = documentStore.OpenSession())
-                {
-                    session.Store(query);
-                    session.SaveChanges();
-                }
-            }
+            throw new NotImplementedException();
         }
-        public ProfileQuery GetProfileQuery(string profileQueryId)
+        public void SaveProfileQuery(ProfileQuery profileQuery)
         {
-            ProfileQuery result;
-            using (var documentStore = GetDocumentStore())
-            {
-                using (var session = documentStore.OpenSession())
-                {
-                    result = session.Load<ProfileQuery>(profileQueryId);
-                }
-            }
-            return result;
+            throw new NotImplementedException();
         }
-        public void SaveUserSession(UserSession userSession)
-        {
-            using (var documentStore = GetDocumentStore())
-            {
-                using (var session = documentStore.OpenSession())
-                {
-                    var us = session.Load<UserSession>(userSession.Id);
-                    us.Data = userSession.Data;
-                    session.SaveChanges();
-                }
-            }
-        }
-        public UserSession GetUserSession(string userSessionId)
-        {
-            UserSession result = null;
-            using (var documentStore = GetDocumentStore())
-            {
-                using (var session = documentStore.OpenSession())
-                {
-                    result = session.Load<UserSession>(userSessionId);
-                }
-            }
-            return result;
-        }
+        #endregion
+
+
+
+
+
+       
     }
 }

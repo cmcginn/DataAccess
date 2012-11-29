@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace DataAccess.Core.Domain
 {
-    
+    [DataContract]
     public class ProfileQuery:BaseEntity
     {
+        [DataMember]
         public virtual string UserId { get; set; }
+        [DataMember]
         public virtual string Name { get; set; }
-        public virtual List<string> LocationIds { get; set; }
+        [DataMember]
+        public virtual List<string> LocationCodes { get; set; }
     }
 }

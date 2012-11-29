@@ -20,7 +20,7 @@ var index = {
     getStates: function (cb) {
         $.ajax({
             type: 'GET',
-            url: '/api/common/QueryLocations',
+            url: '/api/common/Locations?$filter=',
             dataType: 'json',
             data: { query: 'Code:US/??' },
             success: function (data, textStatus, jqXHR) {
@@ -51,7 +51,7 @@ var index = {
     createProfileQuery:function(cb){
         $.ajax({
             type: 'GET',
-            url: '/api/ProfileQuery',
+            url: '/api/ProfileQueries',
             dataType: 'json',            
             success: function (data, textStatus, jqXHR) {
                 index.dataModel.ProfileQuery = data;
@@ -120,16 +120,7 @@ var index = {
 
         //}, index.viewModel);
     },
-    init: function () {
 
-        //index.getStates(function () {
-        //    index.onDataReceived();
-        //});
-        index.createProfileQuery(function () {
-            index.onDataReceived();
-        });
-
-    },
     layout: function () {
         $('.state').accordion({
             active: false,
@@ -138,6 +129,16 @@ var index = {
                 index.stateSelected(this);
             }
         });
+    },
+    init: function () {
+
+        index.getStates(function () {
+            index.onDataReceived();
+        });
+        //index.createProfileQuery(function () {
+        //    index.onDataReceived();
+        //});
+
     }
 
 }

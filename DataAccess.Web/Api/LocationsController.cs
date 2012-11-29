@@ -2,13 +2,14 @@
 using DataAccess.Core.Infrastructure;
 using DataAccess.Core.Services;
 using DataAccess.Raven.Services;
-
+using Raven.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.OData.Query;
 
 namespace DataAccess.Web.Api
 {
@@ -18,31 +19,36 @@ namespace DataAccess.Web.Api
         WorkContext _workContext = new WorkContext();
         IDataService _dataService = new RavenDataService();
         // GET api/locations
-        [Queryable]
+        [Queryable(HandleNullPropagation = HandleNullPropagationOption.False)] 
         public IQueryable<Location> Get()
         {
-            return _dataService.Locations();
+            var result = _dataService.Locations();
+            System.Diagnostics.Debug.Write(result.ToString());
+            return result;
         }
 
         // GET api/locations/5
-        public string Get(int id)
+        public Location Get(string id)
         {
-            return "value";
+            return _dataService.Location(id);
         }
 
         // POST api/locations
-        public void Post([FromBody]string value)
+        public void Post(Location location)
         {
+            throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.MethodNotAllowed));
         }
 
         // PUT api/locations/5
-        public void Put(int id, [FromBody]string value)
+        public void Put(Location location)
         {
+            throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.MethodNotAllowed));
         }
 
         // DELETE api/locations/5
-        public void Delete(int id)
+        public void Delete(string id)
         {
+            throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.MethodNotAllowed));
         }
     }
 }
