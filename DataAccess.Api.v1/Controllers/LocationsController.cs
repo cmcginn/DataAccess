@@ -2,7 +2,6 @@
 using DataAccess.Core.Infrastructure;
 using DataAccess.Core.Services;
 using DataAccess.Raven.Services;
-using Raven.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,8 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.OData.Query;
 
-namespace DataAccess.Web.Api
+
+namespace DataAccess.Api.v1.Controllers
 {
      
     public class LocationsController : ApiController
@@ -22,9 +22,7 @@ namespace DataAccess.Web.Api
         [Queryable(HandleNullPropagation = HandleNullPropagationOption.False)] 
         public IQueryable<Location> Get()
         {
-            var result = _dataService.Locations();
-            System.Diagnostics.Debug.Write(result.ToString());
-            return result;
+            return _dataService.Locations();           
         }
 
         // GET api/locations/5

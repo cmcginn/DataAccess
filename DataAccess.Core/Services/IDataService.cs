@@ -1,6 +1,4 @@
 ﻿using DataAccess.Core.Domain;
-using Raven.Client;
-using Raven.Client.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +11,8 @@ namespace DataAccess.Core.Services
 
         #region Locations
         IQueryable<Location> Locations();
+        IQueryable<Location> StateProvinces();
+        Location StateProvince(string code);
         Location Location(string code);
         #endregion
         #region Profile Queries

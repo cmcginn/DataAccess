@@ -17,7 +17,7 @@ namespace DataAccess.Raven.Services
         WorkContext _workContext = new WorkContext();
         DocumentStore GetDocumentStore()
         {
-            var result = new DocumentStore { ConnectionStringName = "RavenDB" };            
+            var result = new DocumentStore { ConnectionStringName = "RavenDB" };
             result.DefaultDatabase = "Test";
             result.Initialize();
             return result;
@@ -35,10 +35,21 @@ namespace DataAccess.Raven.Services
 
             var session = documentStore.OpenSession();
 
-            return session.Query<Location>("LocationsByCodeIndex");
+            return session.Query<Location>();
 
         }
-
+        public Location StateProvince(string code)
+        {
+            var documentStore = GetDocumentStore();
+            var session = documentStore.OpenSession();
+            return session.Load<Location>(code);
+        }
+        public IQueryable<Location> StateProvinces()
+        {
+            var documentStore = GetDocumentStore();
+            var session = documentStore.OpenSession();
+            return session.Advanced.LuceneQuery<Location>().Where("Code: US??").AsQueryable();
+        }
         public Location Location(string code)
         {
             var documentStore = GetDocumentStore();
@@ -72,6 +83,6 @@ namespace DataAccess.Raven.Services
 
 
 
-       
+
     }
 }

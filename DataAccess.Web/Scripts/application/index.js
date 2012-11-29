@@ -18,35 +18,22 @@ var index = {
     userId:'users/193',
     /*---------------------Data Access-----------------------*/
     getStates: function (cb) {
-        $.ajax({
-            type: 'GET',
-            url: '/api/common/Locations?$filter=',
-            dataType: 'json',
-            data: { query: 'Code:US/??' },
-            success: function (data, textStatus, jqXHR) {
-                index.dataModel.States = data;
-                cb();
-            }
-        });
+        $.getJSON(apiHost + '/StateProvinces?callback=?', null, function (data, textStatus, jqXHR) {
+            index.dataModel.States = data;
+            cb();
+        }); 
     },
     getCities: function (state, cb) {
-        $.ajax({
-            type: 'GET',
-            url: '/api/common/QueryLocations',
-            dataType: 'json',
-            data: { query: 'Code:' + state.id() + '/*' },
-            success: function (data, textStatus, jqXHR) {
-
-                $(data).each(function () {
-                    var city = new City(this.Id, this.Name, this.Selected);
-                    city.selected.subscribe(function (newVal) {
-                        index.citySelected(city);
-                    });
-                    state.cities().push(city);
+        $.getJSON(apiHost + '/Locations?$filter=startswith(Code,\''+ state.id() +'\')&callback=?',null, function (data, textStatus, jqXHR) {
+            $(data).each(function () {
+                var city = new City(this.code, this.name, false);
+                city.selected.subscribe(function (newVal) {
+                    index.citySelected(city);
                 });
-                cb();
-            }
-        })
+                state.cities().push(city);
+            });
+            cb();
+        });     
     },
     createProfileQuery:function(cb){
         $.ajax({
@@ -61,8 +48,7 @@ var index = {
     },
     /*---------------------Events-----------------------*/
     onDataReceived:function(){
-        if (index.dataModel.States.length > 0
-            && index.dataModel.ProfileQuery != null) {
+        if (index.dataModel.States.length > 0) {
             index.mapViewModel();
             ko.applyBindings(index.viewModel);
             index.layout();
@@ -95,8 +81,8 @@ var index = {
             'create': function (options) {
 
                 var item = {
-                    name: ko.observable(options.data.Name),
-                    id: ko.observable(options.data.Id),
+                    name: ko.observable(options.data.name),
+                    id: ko.observable(options.data.code),
                     cities: ko.observable([]),
                     selected: function (e) {
                         index.stateSelected(e);

@@ -9,7 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace DataAccess.Web.Api
+namespace DataAccess.Api.v1.Controllers
 {
     public class UserProfileQueriesController : ApiController
     {
