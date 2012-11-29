@@ -42,11 +42,16 @@ namespace DataAccess.Api.v1.Controllers
         }
 
         // POST api/profilequeries
-        public void Post(ProfileQuery profileQuery)
+        public ProfileQuery Post([FromBody] string instuff)
         {
             try
             {
-                _dataService.SaveProfileQuery(profileQuery);
+                var result = new ProfileQuery();
+                result.UserId = "asasasas";
+               
+                //_dataService.SaveProfileQuery(profileQuery);
+                //profileQuery.UserId = _workContext.CurrentUserId;
+               return result;
             }
             catch
             {

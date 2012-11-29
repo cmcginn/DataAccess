@@ -75,7 +75,18 @@ namespace DataAccess.Raven.Services
         }
         public void SaveProfileQuery(ProfileQuery profileQuery)
         {
-            throw new NotImplementedException();
+            var documentStore = GetDocumentStore();
+            var session = documentStore.OpenSession();
+            if (!String.IsNullOrEmpty(profileQuery.Id))
+            {
+                var existing = session.Load<ProfileQuery>(profileQuery.Id);
+            }
+            else
+            {
+                profileQuery.UserId = _workContext.CurrentUserId;
+                session.Store(profileQuery);
+                session.SaveChanges();
+            }
         }
         #endregion
 

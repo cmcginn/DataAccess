@@ -1,4 +1,5 @@
 ﻿using DataAccess.Api.v1.App_Start;
+using DataAccess.Api.v1.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,9 @@ namespace DataAccess.Api.v1
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             FormatterConfig.RegisterFormatters(GlobalConfiguration.Configuration.Formatters);
+  
+            GlobalConfiguration.Configuration.MessageHandlers.Add(new CrossDomainHandler());
+            GlobalConfiguration.Configuration.Formatters.RemoveAt(1);
         }
     }
 }
