@@ -13,7 +13,7 @@ namespace DataAccess.Api.v1.Controllers
 {
     public class UserProfileQueriesController : ApiController
     {
-        WorkContext _workContext = new WorkContext();
+        
         IDataService _dataService = new RavenDataService();
         // GET api/profilequeries
         public IQueryable<ProfileQuery> Get()
@@ -42,16 +42,12 @@ namespace DataAccess.Api.v1.Controllers
         }
 
         // POST api/profilequeries
-        public ProfileQuery Post([FromBody] string instuff)
+        public ProfileQuery Post(ProfileQuery profileQuery)
         {
             try
-            {
-                var result = new ProfileQuery();
-                result.UserId = "asasasas";
-               
-                //_dataService.SaveProfileQuery(profileQuery);
-                //profileQuery.UserId = _workContext.CurrentUserId;
-               return result;
+            {                
+                _dataService.SaveProfileQuery(profileQuery);                
+                return profileQuery;
             }
             catch
             {
