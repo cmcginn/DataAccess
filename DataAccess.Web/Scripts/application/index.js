@@ -5,7 +5,12 @@ function City(id, code, name, selected, cb) {
     this.code = ko.observable(code);
     this.name = ko.observable(name);
     this.selected = ko.observable(selected);
-    }
+}
+function Phrase(phrase, score, selected) {
+    this.phrase = ko.observable(phrase);
+    this.score = ko.observable(score);
+    this.selected = ko.observable(selected);   
+}
 var index = {
     /*---------------------State-----------------------*/
 
@@ -50,12 +55,18 @@ var index = {
         }
     },
     /*---------------------Models-----------------------*/
-    dataModel: {
+    dataModel: {        
         States: [],        
-        ProfileQuery: {
+        ProfileQuery:{
             UserId:null,
             Name:null,
-            Locations:[]
+            Locations: [],
+            Phrases:ko.observable([])
+        },
+        NewPhrase: {
+            Phrase: null,
+            Score: null,
+            Selected: false
         }
 
     },
@@ -65,6 +76,14 @@ var index = {
             ko.applyBindingsToNode(node[0], { template: { name: 'cities-template', data: item } });
             node.height('100%');
         });
+    },
+    addPhrase:function(item){
+        var phrases = index.viewModel.ProfileQuery.Phrases();
+        phrases.push(new Phrase(item.Phrase(), item.Score(), true));
+        index.viewModel.ProfileQuery.Phrases(phrases);
+    },
+    removePhrase: function (item) {
+        item.selected(false);
     },
     citySelected: function (city) {
         
@@ -116,6 +135,23 @@ var index = {
                 index.stateSelected(this);
             }
         });
+        $('#profile_query_name').watermark('Query Name (Required)');
+        $('#btn_add_phrase').button({
+            icons: {
+                primary: 'ui-icon-plus'
+            },
+            text: false
+        }).click(function () {
+
+            $('.phrase-remove:last').button({
+                    icons: {
+                        primary: 'ui-icon-minus'
+                    },
+                    text: false
+                });
+            
+        });
+      
     },
     init: function () {
 
