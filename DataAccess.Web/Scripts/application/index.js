@@ -48,7 +48,7 @@ var index = {
             url: apiHost + '/UserProfileQueries',
             data: ko.mapping.toJS(index.viewModel.profileQuery),
             success: function (data, textStatus, jqXHR) {
-                console.log(data);
+                index.viewModel.profileQuery.id = JSON.parse(data).id;
             }
         });
     },
