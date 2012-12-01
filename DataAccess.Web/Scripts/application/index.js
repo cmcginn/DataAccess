@@ -16,7 +16,7 @@ var index = {
 
     userSessionId: 'UserSessions/321',
     userId: 'users/193',
-    profileQueryId:'ProfileQueries/673',
+    profileQueryId:'',
     /*---------------------Data Access-----------------------*/
     getStates: function (cb) {
         $.getJSON(apiHost + '/StateProvinces?callback=?', null, function (data, textStatus, jqXHR) {            
@@ -27,7 +27,8 @@ var index = {
     getCities: function (state, cb) {
         $.getJSON(apiHost + '/Locations?$filter=startswith(Code,\'' + state.code() + '\')&callback=?', null, function (data, textStatus, jqXHR) {
             $(data).each(function () {
-                var city = ko.mapping.fromJS(this, index.cityMapping)
+                this.selected = index.viewModel.profileQuery.locations.mappedIndexOf({ code: this.code }) > -1;
+                var city = ko.mapping.fromJS(this, index.cityMapping)              
                 state.cities().push(city);
                 city.selected.subscribe(function (newVal) {
                     index.citySelected(city);
@@ -69,13 +70,18 @@ var index = {
     },
     citySelected: function (city) {
 
-        var viewModelItem = ko.utils.arrayFilter(index.viewModel.profileQuery.locations(), function (item) {
-            return item.id() == city.id();
-        });
-        if (viewModelItem.length == 0)
+        //var viewModelItem = ko.utils.arrayFilter(index.viewModel.profileQuery.locations(), function (item) {
+        //    return item.id() == city.id();
+        //});
+        index.viewModel.profileQuery.locations.mappedRemove({ code: city.code() });
+        //var existingIndex = index.viewModel.profileQuery.locations.mappedIndexOf({ code: city.code() });
+        //mappedRemove
+       if(city.selected())
             index.viewModel.profileQuery.locations().push(city);
-        else
-            viewModelItem[0].selected(city.selected);
+        //else
+        //    index.viewModel.profileQuery.locations()[existingIndex].selected(city.selected());
+        //else
+            //viewModelItem[0].selected(city.selected);
     },
     /*---------------------Models-----------------------*/
     viewModel: null,
@@ -90,8 +96,7 @@ var index = {
 
     },
     cityMapping:{
-        'create': function (options) {
-            options.data.selected = index.viewModel.profileQuery.locations.mappedIndexOf({ code: options.data.code }) > -1;
+        'create': function (options) {            
             return ko.mapping.fromJS(options.data);
         }
     },
