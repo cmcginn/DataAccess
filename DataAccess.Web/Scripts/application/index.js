@@ -35,18 +35,18 @@ var index = {
             cb();
         });
     },
-    createProfileQuery: function (cb) {
-        $.ajax({
-            type: 'GET',
-            url: '/api/ProfileQueries',
-            dataType: 'json',
-            success: function (data, textStatus, jqXHR) {
-                index.dataModel.profileQuery = data;
-                cb();
-            }
-        })
-    },
-    saveProfileQuery: function () {
+    //createProfileQuery: function (cb) {
+    //    $.ajax({
+    //        type: 'GET',
+    //        url: '/api/ProfileQueries',
+    //        dataType: 'json',
+    //        success: function (data, textStatus, jqXHR) {
+    //            index.dataModel.profileQuery = data;
+    //            cb();
+    //        }
+    //    })
+    //},
+    postProfileQuery: function () {
         $.ajax({
             type: 'POST',
             url: apiHost + '/UserProfileQueries',
@@ -64,7 +64,25 @@ var index = {
             index.layout();
         }
     },
+    stateSelected: function (item) {
+        index.getCities(item, function () {
+            var node = $('.content[data-code="' + item.code() + '"]');
+            ko.applyBindingsToNode(node[0], { template: { name: 'cities-template', data: item } });
+            node.height('100%');
+        });
+    },
+    citySelected: function (city) {
+
+        var viewModelItem = ko.utils.arrayFilter(index.viewModel.profileQuery.locations(), function (item) {
+            return item.id() == city.id();
+        });
+        if (viewModelItem.length == 0)
+            index.viewModel.profileQuery.locations().push(city);
+        else
+            viewModelItem[0].selected(city.selected());
+    },
     /*---------------------Models-----------------------*/
+    viewModel: null,
     dataModel: {
         states: [],
         profileQuery: {
@@ -79,31 +97,6 @@ var index = {
             selected: false
         }
 
-    },
-    stateSelected: function (item) {
-        index.getCities(item, function () {
-            var node = $('.content[data-code="' + item.code() + '"]');
-            ko.applyBindingsToNode(node[0], { template: { name: 'cities-template', data: item } });
-            node.height('100%');
-        });
-    },
-    addPhrase: function (item) {
-        var phrases = index.viewModel.profileQuery.phrases();
-        phrases.push(new Phrase(item.phrase(), item.score(), true));
-        index.viewModel.profileQuery.phrases(phrases);
-    },
-    removePhrase: function (item) {
-        item.selected(false);
-    },
-    citySelected: function (city) {
-
-        var viewModelItem = ko.utils.arrayFilter(index.viewModel.profileQuery.locations(), function (item) {
-            return item.id() == city.id();
-        });
-        if (viewModelItem.length == 0)
-            index.viewModel.profileQuery.locations().push(city);
-        else
-            viewModelItem[0].selected(city.selected());
     },
     mapping: {
         'states': {
@@ -122,7 +115,7 @@ var index = {
             }
         }
     },
-    viewModel: null,
+    
     mapViewModel: function () {
         index.dataModel.profileQuery.userId = index.userId;
         index.viewModel = ko.mapping.fromJS(index.dataModel, index.mapping);
@@ -136,7 +129,15 @@ var index = {
 
         //}, index.viewModel);
     },
-
+    /*---------------------Helpers-----------------------*/
+    addPhrase: function (item) {
+        var phrases = index.viewModel.profileQuery.phrases();
+        phrases.push(new Phrase(item.phrase(), item.score(), true));
+        index.viewModel.profileQuery.phrases(phrases);
+    },
+    removePhrase: function (item) {
+        item.selected(false);
+    },
     layout: function () {
         $('.state').accordion({
             active: false,
@@ -163,6 +164,7 @@ var index = {
         });
 
     },
+    /*---------------------Initialization-----------------------*/
     init: function () {
 
         index.getStates(function () {

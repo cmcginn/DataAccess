@@ -56,6 +56,7 @@ namespace DataAccess.Api.v1.Controllers
         }
 
         // PUT api/profilequeries/5
+        [AcceptVerbs("PUT")]
         public void Put(ProfileQuery profileQuery)
         {
             try
