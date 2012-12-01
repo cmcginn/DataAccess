@@ -6,8 +6,8 @@ function City(id, code, name, selected, cb) {
     this.name = ko.observable(name);
     this.selected = ko.observable(selected);
 }
-function Phrase(phrase, score, selected) {
-    this.phrase = ko.observable(phrase);
+function Phrase(value, score, selected) {
+    this.value = ko.observable(value);
     this.score = ko.observable(score);
     this.selected = ko.observable(selected);
 }
@@ -16,9 +16,10 @@ var index = {
 
     userSessionId: 'UserSessions/321',
     userId: 'users/193',
+    profileQueryId:'ProfileQueries/673',
     /*---------------------Data Access-----------------------*/
     getStates: function (cb) {
-        $.getJSON(apiHost + '/StateProvinces?callback=?', null, function (data, textStatus, jqXHR) {
+        $.getJSON(apiHost + '/StateProvinces?callback=?', null, function (data, textStatus, jqXHR) {            
             index.dataModel.states = data;
             cb();
         });
@@ -26,31 +27,26 @@ var index = {
     getCities: function (state, cb) {
         $.getJSON(apiHost + '/Locations?$filter=startswith(Code,\'' + state.code() + '\')&callback=?', null, function (data, textStatus, jqXHR) {
             $(data).each(function () {
-                var city = new City(this.id, this.code, this.name, this.selected);
+                var city = ko.mapping.fromJS(this, index.cityMapping)
+                state.cities().push(city);
                 city.selected.subscribe(function (newVal) {
                     index.citySelected(city);
                 });
-                state.cities().push(city);
             });
             cb();
         });
     },
-    //createProfileQuery: function (cb) {
-    //    $.ajax({
-    //        type: 'GET',
-    //        url: '/api/ProfileQueries',
-    //        dataType: 'json',
-    //        success: function (data, textStatus, jqXHR) {
-    //            index.dataModel.profileQuery = data;
-    //            cb();
-    //        }
-    //    })
-    //},
+    getProfileQuery:function(cb){
+        $.getJSON(apiHost + '/UserProfileQueries?id='+index.profileQueryId+'&callback=?', null, function (data, textStatus, jqXHR) {
+            index.dataModel.profileQuery = data;           
+            cb();
+        });
+    },
     postProfileQuery: function () {
         $.ajax({
             type: 'POST',
             url: apiHost + '/UserProfileQueries',
-            data: index.viewModel.profileQuery,
+            data: ko.mapping.toJS(index.viewModel.profileQuery),
             success: function (data, textStatus, jqXHR) {
                 console.log(data);
             }
@@ -79,39 +75,60 @@ var index = {
         if (viewModelItem.length == 0)
             index.viewModel.profileQuery.locations().push(city);
         else
-            viewModelItem[0].selected(city.selected());
+            viewModelItem[0].selected(city.selected);
     },
     /*---------------------Models-----------------------*/
     viewModel: null,
     dataModel: {
         states: [],
-        profileQuery: {
-            userId: null,
-            name: null,
-            locations: [],
-            phrases: ko.observable([])
-        },
+        profileQuery:null,
         newPhrase: {
-            phrase: null,
+            value: null,
             score: null,
             selected: false
         }
 
     },
+    cityMapping:{
+        'create': function (options) {
+            options.data.selected = index.viewModel.profileQuery.locations.mappedIndexOf({ code: options.data.code }) > -1;
+            return ko.mapping.fromJS(options.data);
+        }
+    },
     mapping: {
+        'profileQuery':{
+            'create': function (options) {
+                return ko.mapping.fromJS(options.data, {
+                    'locations': {
+                        key: function (data) {                         
+                            return ko.utils.unwrapObservable(data.code);
+                        }                        
+                    },
+                    'phrases': {
+                        'create': function (options) {
+                            options.data.selected = ko.observable(true);
+                            return options.data;
+                        }
+                    }
+                });
+            }
+        },
+      
         'states': {
             'create': function (options) {
 
                 var item = {
                     name: ko.observable(options.data.name),
                     code: ko.observable(options.data.code),
+                    key:function(data){
+                        return ko.utils.unwrapObservable(data.code);
+                    },
                     cities: ko.observable([]),
                     selected: function (e) {
                         index.stateSelected(e);
                     }
                 };
                 return item;
-
             }
         }
     },
@@ -119,24 +136,22 @@ var index = {
     mapViewModel: function () {
         index.dataModel.profileQuery.userId = index.userId;
         index.viewModel = ko.mapping.fromJS(index.dataModel, index.mapping);
-        //ko.postbox.subscribe('name', function (newValue) {
-        //    console.log('newValue');
-        //    var cities = [];
-        //    cities.push(new City('/US/FL/Orlando', 'Orlando'));
-        //    cities.push(new City('/US/FL/Tampa', 'Tampa'));
-        //    cities.push(new City('/US/FL/Miami', 'Miami'));
 
-
-        //}, index.viewModel);
     },
     /*---------------------Helpers-----------------------*/
     addPhrase: function (item) {
         var phrases = index.viewModel.profileQuery.phrases();
-        phrases.push(new Phrase(item.phrase(), item.score(), true));
+        phrases.push(new Phrase(item.value(), item.score(), true));
         index.viewModel.profileQuery.phrases(phrases);
+        index.viewModel.newPhrase.value('');
+
     },
     removePhrase: function (item) {
         item.selected(false);
+        var selectedPhrases = ko.utils.arrayFilter(index.viewModel.profileQuery.phrases(), function (item) {
+            return item.selected();
+        });
+        index.viewModel.profileQuery.phrases(selectedPhrases);
     },
     layout: function () {
         $('.state').accordion({
@@ -147,6 +162,8 @@ var index = {
             }
         });
         $('#profile_query_name').watermark('Query Name (Required)');
+        $('#new_phrase').watermark('Search Phrase');
+        $('#new_phrase_score').watermark('Score');
         $('#btn_add_phrase').button({
             icons: {
                 primary: 'ui-icon-plus'
@@ -162,18 +179,24 @@ var index = {
             });
 
         });
+        $('.phrase-remove').button({
+            icons: {
+                primary: 'ui-icon-minus'
+            },
+            text: false
+        });
+        $('#btn_save').button().click(function () {
 
+            index.postProfileQuery();
+        });
     },
     /*---------------------Initialization-----------------------*/
     init: function () {
-
-        index.getStates(function () {
-            index.onDataReceived();
+        index.getProfileQuery(function () {
+            index.getStates(function () {
+                index.onDataReceived();
+            });
         });
-        //index.createProfileQuery(function () {
-        //    index.onDataReceived();
-        //});
-
     }
 
 }

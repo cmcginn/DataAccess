@@ -42,6 +42,11 @@
         </div>
     </div>
 </script>
+<div class="ym-grid">
+    <div class="ym-gr ym-g20">
+        <button id="btn_save">Save</button>
+    </div>
+</div>
 <div data-bind="with:profileQuery">
     <div>
         <input id="profile_query_name" type="text" data-bind="value:name" />
@@ -49,7 +54,7 @@
     <div>
         <div class="ym-grid">
             <div class="ym-gl ym-g50">
-                <input type="text" id="new_phrase" data-bind="value:$parent.newPhrase.phrase" />
+                <input type="text" id="new_phrase" data-bind="value:$parent.newPhrase.value" />
             </div>
             <div class="ym-gl ym-g25">
                 <input type="text" id="new_phrase_score" data-bind="value:$parent.newPhrase.score"/>
@@ -60,7 +65,7 @@
         </div>
         <div data-bind="foreach:phrases">
             <div class="ym-grid" data-bind="if:selected">
-            <div class="ym-gl ym-g25"><span data-bind="text:phrase"></span></div>
+            <div class="ym-gl ym-g25"><span data-bind="text:value"></span></div>
             <div class="ym-gl ym-g25"><span data-bind="text:score"></span></div>
                 <div class="ym-gl  ym-g25">
                     <button class="phrase-remove" data-bind="click:function(){index.removePhrase($data)}"></button>

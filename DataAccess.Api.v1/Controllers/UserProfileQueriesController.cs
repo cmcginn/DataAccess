@@ -33,7 +33,10 @@ namespace DataAccess.Api.v1.Controllers
         {
             try
             {
-                return _dataService.ProfileQuery(id);
+                if (id == null || id =="null")
+                    return new ProfileQuery();
+                else
+                return  _dataService.ProfileQuery(id);
             }
             catch
             {
@@ -45,7 +48,9 @@ namespace DataAccess.Api.v1.Controllers
         public ProfileQuery Post(ProfileQuery profileQuery)
         {
             try
-            {                
+            {
+                if (profileQuery.Id == null || profileQuery.Id == "null")
+                    profileQuery.Id = null;
                 _dataService.SaveProfileQuery(profileQuery);                
                 return profileQuery;
             }

@@ -48,6 +48,7 @@
     <Compile Include="Domain\BaseEntity.cs" />
     <Compile Include="Domain\KeyValue.cs" />
     <Compile Include="Domain\Location.cs" />
+    <Compile Include="Domain\Phrase.cs" />
     <Compile Include="Domain\ProfileQuery.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Domain\UserSession.cs" />

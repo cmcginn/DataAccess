@@ -66,7 +66,9 @@ namespace DataAccess.Raven.Services
 
         public ProfileQuery ProfileQuery(string id)
         {
-            throw new NotImplementedException();
+            var documentStore = GetDocumentStore();
+            var session = documentStore.OpenSession();
+            return session.Load<ProfileQuery>(id);
         }
 
         public void DeleteProfileQuery(string id)
@@ -77,16 +79,16 @@ namespace DataAccess.Raven.Services
         {
             var documentStore = GetDocumentStore();
             var session = documentStore.OpenSession();
-            if (!String.IsNullOrEmpty(profileQuery.Id))
-            {
-                var existing = session.Load<ProfileQuery>(profileQuery.Id);
-            }
-            else
-            {
-                profileQuery.UserId = _workContext.CurrentUserId;
+            //if (String.IsNullOrEmpty(profileQuery.Id))
+            //{
+            //    var existing = session.Load<ProfileQuery>(profileQuery.Id);
+            //}
+            //else
+            //{
+                
                 session.Store(profileQuery);
                 session.SaveChanges();
-            }
+            //}
         }
         #endregion
 
