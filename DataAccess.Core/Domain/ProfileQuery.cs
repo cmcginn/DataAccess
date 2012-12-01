@@ -14,6 +14,6 @@ namespace DataAccess.Core.Domain
         [DataMember]
         public virtual string Name { get; set; }
         [DataMember]
-        public virtual List<Location> LocationCodes { get; set; }
+        public virtual List<Location> Locations { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿
 function City(id, code, name, selected, cb) {
-    
+
     this.id = ko.observable(id);
     this.code = ko.observable(code);
     this.name = ko.observable(name);
@@ -9,22 +9,22 @@ function City(id, code, name, selected, cb) {
 function Phrase(phrase, score, selected) {
     this.phrase = ko.observable(phrase);
     this.score = ko.observable(score);
-    this.selected = ko.observable(selected);   
+    this.selected = ko.observable(selected);
 }
 var index = {
     /*---------------------State-----------------------*/
 
     userSessionId: 'UserSessions/321',
-    userId:'users/193',
+    userId: 'users/193',
     /*---------------------Data Access-----------------------*/
     getStates: function (cb) {
         $.getJSON(apiHost + '/StateProvinces?callback=?', null, function (data, textStatus, jqXHR) {
-            index.dataModel.States = data;
+            index.dataModel.states = data;
             cb();
-        }); 
+        });
     },
     getCities: function (state, cb) {
-        $.getJSON(apiHost + '/Locations?$filter=startswith(Code,\''+ state.code() +'\')&callback=?',null, function (data, textStatus, jqXHR) {
+        $.getJSON(apiHost + '/Locations?$filter=startswith(Code,\'' + state.code() + '\')&callback=?', null, function (data, textStatus, jqXHR) {
             $(data).each(function () {
                 var city = new City(this.id, this.code, this.name, this.selected);
                 city.selected.subscribe(function (newVal) {
@@ -33,40 +33,50 @@ var index = {
                 state.cities().push(city);
             });
             cb();
-        });     
+        });
     },
-    createProfileQuery:function(cb){
+    createProfileQuery: function (cb) {
         $.ajax({
             type: 'GET',
             url: '/api/ProfileQueries',
-            dataType: 'json',            
+            dataType: 'json',
             success: function (data, textStatus, jqXHR) {
-                index.dataModel.ProfileQuery = data;
+                index.dataModel.profileQuery = data;
                 cb();
             }
         })
     },
+    saveProfileQuery: function () {
+        $.ajax({
+            type: 'POST',
+            url: apiHost + '/UserProfileQueries',
+            data: index.viewModel.profileQuery,
+            success: function (data, textStatus, jqXHR) {
+                console.log(data);
+            }
+        });
+    },
     /*---------------------Events-----------------------*/
-    onDataReceived:function(){
-        if (index.dataModel.States.length > 0) {
+    onDataReceived: function () {
+        if (index.dataModel.states.length > 0) {
             index.mapViewModel();
             ko.applyBindings(index.viewModel);
             index.layout();
         }
     },
     /*---------------------Models-----------------------*/
-    dataModel: {        
-        States: [],        
-        ProfileQuery:{
-            UserId:null,
-            Name:null,
-            Locations: [],
-            Phrases:ko.observable([])
+    dataModel: {
+        states: [],
+        profileQuery: {
+            userId: null,
+            name: null,
+            locations: [],
+            phrases: ko.observable([])
         },
-        NewPhrase: {
-            Phrase: null,
-            Score: null,
-            Selected: false
+        newPhrase: {
+            phrase: null,
+            score: null,
+            selected: false
         }
 
     },
@@ -77,26 +87,26 @@ var index = {
             node.height('100%');
         });
     },
-    addPhrase:function(item){
-        var phrases = index.viewModel.ProfileQuery.Phrases();
-        phrases.push(new Phrase(item.Phrase(), item.Score(), true));
-        index.viewModel.ProfileQuery.Phrases(phrases);
+    addPhrase: function (item) {
+        var phrases = index.viewModel.profileQuery.phrases();
+        phrases.push(new Phrase(item.phrase(), item.score(), true));
+        index.viewModel.profileQuery.phrases(phrases);
     },
     removePhrase: function (item) {
         item.selected(false);
     },
     citySelected: function (city) {
-        
-        var viewModelItem = ko.utils.arrayFilter(index.viewModel.ProfileQuery.Locations(), function (item) {            
+
+        var viewModelItem = ko.utils.arrayFilter(index.viewModel.profileQuery.locations(), function (item) {
             return item.id() == city.id();
-        }); 
+        });
         if (viewModelItem.length == 0)
-            index.viewModel.ProfileQuery.Locations().push(city);
+            index.viewModel.profileQuery.locations().push(city);
         else
             viewModelItem[0].selected(city.selected());
     },
     mapping: {
-        'States': {
+        'states': {
             'create': function (options) {
 
                 var item = {
@@ -114,7 +124,7 @@ var index = {
     },
     viewModel: null,
     mapViewModel: function () {
-        index.dataModel.ProfileQuery.UserId = index.userId;
+        index.dataModel.profileQuery.userId = index.userId;
         index.viewModel = ko.mapping.fromJS(index.dataModel, index.mapping);
         //ko.postbox.subscribe('name', function (newValue) {
         //    console.log('newValue');
@@ -144,14 +154,14 @@ var index = {
         }).click(function () {
 
             $('.phrase-remove:last').button({
-                    icons: {
-                        primary: 'ui-icon-minus'
-                    },
-                    text: false
-                });
-            
+                icons: {
+                    primary: 'ui-icon-minus'
+                },
+                text: false
+            });
+
         });
-      
+
     },
     init: function () {
 

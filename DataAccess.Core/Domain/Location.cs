@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DataAccess.Core.Domain
 {
-
+    [DataContract]
     public class Location:BaseEntity
     {
         [DataMember]

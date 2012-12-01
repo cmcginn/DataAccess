@@ -29,7 +29,7 @@
     </div>
 </script>
 <script id="states-template" type="text/html">
-    <div data-bind="foreach:States">
+    <div data-bind="foreach:states">
         <div class="state ym-grid">
             <h1 data-bind="click:selected"><span style="padding-left: 15px" data-bind="text:name"></span></h1>
             <div class="content" data-bind="attr:{'data-code':code}">
@@ -42,23 +42,23 @@
         </div>
     </div>
 </script>
-<div data-bind="with:ProfileQuery">
+<div data-bind="with:profileQuery">
     <div>
-        <input id="profile_query_name" type="text" data-bind="text:Name" />
+        <input id="profile_query_name" type="text" data-bind="value:name" />
     </div>
     <div>
         <div class="ym-grid">
             <div class="ym-gl ym-g50">
-                <input type="text" id="new_phrase" data-bind="value:$parent.NewPhrase.Phrase" />
+                <input type="text" id="new_phrase" data-bind="value:$parent.newPhrase.phrase" />
             </div>
             <div class="ym-gl ym-g25">
-                <input type="text" id="new_phrase_score" data-bind="value:$parent.NewPhrase.Score"/>
+                <input type="text" id="new_phrase_score" data-bind="value:$parent.newPhrase.score"/>
             </div>
             <div class="ym-gl ym-g25">
-                <button type="button" id="btn_add_phrase" data-bind="click:function(){index.addPhrase($parent.NewPhrase)}" />
+                <button type="button" id="btn_add_phrase" data-bind="click:function(){index.addPhrase($parent.newPhrase)}" />
             </div>
         </div>
-        <div data-bind="foreach:Phrases">
+        <div data-bind="foreach:phrases">
             <div class="ym-grid" data-bind="if:selected">
             <div class="ym-gl ym-g25"><span data-bind="text:phrase"></span></div>
             <div class="ym-gl ym-g25"><span data-bind="text:score"></span></div>
