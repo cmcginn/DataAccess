@@ -21,5 +21,12 @@ namespace DataAccess.Core.Services
         void SaveProfileQuery(ProfileQuery profileQuery);
         void DeleteProfileQuery(string id);
         #endregion
+        #region Users
+        //TODO, maybe open auth
+        //IQueryable<User> Users();
+        //User User(string id);
+        //User SaveUser(User user);
+        //void DeleteUser(string id);
+        #endregion
     }
 }

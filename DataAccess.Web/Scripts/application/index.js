@@ -15,20 +15,14 @@ var index = {
     /*---------------------State-----------------------*/
 
     userSessionId: 'UserSessions/321',
-    userId: 'users/193',
-    profileQueryId:'',
+    profileQueryId: '',
     /*---------------------Data Access-----------------------*/
-    getStates: function (cb) {
-        $.getJSON(apiHost + '/StateProvinces?callback=?', null, function (data, textStatus, jqXHR) {            
-            index.dataModel.states = data;
-            cb();
-        });
-    },
+
     getCities: function (state, cb) {
         $.getJSON(apiHost + '/Locations?$filter=startswith(Code,\'' + state.code() + '\')&callback=?', null, function (data, textStatus, jqXHR) {
             $(data).each(function () {
                 this.selected = index.viewModel.profileQuery.locations.mappedIndexOf({ code: this.code }) > -1;
-                var city = ko.mapping.fromJS(this, index.cityMapping)              
+                var city = ko.mapping.fromJS(this, index.cityMapping)
                 state.cities().push(city);
                 city.selected.subscribe(function (newVal) {
                     index.citySelected(city);
@@ -37,12 +31,7 @@ var index = {
             cb();
         });
     },
-    getProfileQuery:function(cb){
-        $.getJSON(apiHost + '/UserProfileQueries?id='+index.profileQueryId+'&callback=?', null, function (data, textStatus, jqXHR) {
-            index.dataModel.profileQuery = data;           
-            cb();
-        });
-    },
+
     postProfileQuery: function () {
         $.ajax({
             type: 'POST',
@@ -50,16 +39,21 @@ var index = {
             data: ko.mapping.toJS(index.viewModel.profileQuery),
             success: function (data, textStatus, jqXHR) {
                 index.viewModel.profileQuery.id = JSON.parse(data).id;
+                index.dataModel.profileQuery = data;
+                ko.mapping.fromJS(index.dataModel.profileQuery.locations, index.locationsMapping);
+                //ko.mapping.fromJS(data.locations,i);
             }
         });
     },
+
     /*---------------------Events-----------------------*/
-    onDataReceived: function () {
-        if (index.dataModel.states.length > 0) {
-            index.mapViewModel();
-            ko.applyBindings(index.viewModel);
-            index.layout();
-        }
+    onDataReceived: function (arg) {
+        
+        $.event.trigger({
+            type: 'dataReceived',
+            message: arg,
+            time: new Date()
+        });
     },
     stateSelected: function (item) {
         index.getCities(item, function () {
@@ -69,25 +63,17 @@ var index = {
         });
     },
     citySelected: function (city) {
-
-        //var viewModelItem = ko.utils.arrayFilter(index.viewModel.profileQuery.locations(), function (item) {
-        //    return item.id() == city.id();
-        //});
         index.viewModel.profileQuery.locations.mappedRemove({ code: city.code() });
-        //var existingIndex = index.viewModel.profileQuery.locations.mappedIndexOf({ code: city.code() });
-        //mappedRemove
-       if(city.selected())
+        if (city.selected())
             index.viewModel.profileQuery.locations().push(city);
-        //else
-        //    index.viewModel.profileQuery.locations()[existingIndex].selected(city.selected());
-        //else
-            //viewModelItem[0].selected(city.selected);
+
     },
     /*---------------------Models-----------------------*/
     viewModel: null,
     dataModel: {
         states: [],
-        profileQuery:null,
+        profileQueries: [],
+        profileQuery: null,
         newPhrase: {
             value: null,
             score: null,
@@ -95,19 +81,73 @@ var index = {
         }
 
     },
-    cityMapping:{
-        'create': function (options) {            
+    profileQueriesMapping: {
+        'profileQueries': {
+            'create': function (options) {
+                return options.data;
+            }
+        }
+    },
+    statesMapping: {
+        'states': {
+            key: function (data) {
+                return ko.utils.unwrapObservable(data.code);
+            },
+            'create': function (options) {
+
+                var item = {
+                    name: options.data.name,
+                    code: options.data.code,
+                    cities: [],
+                    selected: function (e) {
+                        //index.stateSelected(e);
+                    }
+                };
+                return ko.mapping.fromJS(item);
+            }
+        }
+        
+    },
+    locationsMapping: {
+
+        key: function (data) {
+            return ko.utils.unwrapObservable(data.code);
+        }
+
+    },
+    phrasesMapping: {
+        'phrases': {
+            'create': function (options) {
+                options.data.selected = true;
+                return options.data;
+            }
+        }
+    },
+    profileQueryMapping: {
+        'profileQuery': {
+            'create': function (options) {
+                return options.data;
+            }
+        }
+    },
+    cityMapping: {
+        'create': function (options) {
             return ko.mapping.fromJS(options.data);
         }
     },
     mapping: {
-        'profileQuery':{
+        'profileQuery': {
             'create': function (options) {
                 return ko.mapping.fromJS(options.data, {
+
+                });
+            },
+            'update': function (options) {
+                return ko.mapping.fromJS(options.data, {
                     'locations': {
-                        key: function (data) {                         
+                        key: function (data) {
                             return ko.utils.unwrapObservable(data.code);
-                        }                        
+                        }
                     },
                     'phrases': {
                         'create': function (options) {
@@ -118,16 +158,16 @@ var index = {
                 });
             }
         },
-      
+
         'states': {
+            key: function (data) {
+                return ko.utils.unwrapObservable(data.code);
+            },
             'create': function (options) {
 
                 var item = {
                     name: ko.observable(options.data.name),
                     code: ko.observable(options.data.code),
-                    key:function(data){
-                        return ko.utils.unwrapObservable(data.code);
-                    },
                     cities: ko.observable([]),
                     selected: function (e) {
                         index.stateSelected(e);
@@ -137,19 +177,30 @@ var index = {
             }
         }
     },
-    
+
     mapViewModel: function () {
-        index.dataModel.profileQuery.userId = index.userId;
+        //index.dataModel.profileQuery.userId = index.userId;
+        //index.viewModel = ko.mapping.fromJS(index.dataModel, index.mapping);
         index.viewModel = ko.mapping.fromJS(index.dataModel, index.mapping);
+        ko.applyBindings(index.viewModel);
 
     },
     /*---------------------Helpers-----------------------*/
     addPhrase: function (item) {
-        var phrases = index.viewModel.profileQuery.phrases();
+        var phrases = index.viewModel.profileQuery().phrases();
         phrases.push(new Phrase(item.value(), item.score(), true));
-        index.viewModel.profileQuery.phrases(phrases);
+        index.viewModel.profileQuery().phrases(phrases);
         index.viewModel.newPhrase.value('');
 
+    },
+    loadProfileQueries: function () {
+        api.get.profileQueries();
+    },
+    loadProfileQuery: function (id) {
+        api.get.profileQuery(id);
+    },
+    loadStates:function(){
+        api.get.states();
     },
     removePhrase: function (item) {
         item.selected(false);
@@ -158,50 +209,62 @@ var index = {
         });
         index.viewModel.profileQuery.phrases(selectedPhrases);
     },
-    layout: function () {
-        $('.state').accordion({
-            active: false,
-            collapsible: true,
-            beforeActivate: function (event) {
-                index.stateSelected(this);
-            }
-        });
-        $('#profile_query_name').watermark('Query Name (Required)');
-        $('#new_phrase').watermark('Search Phrase');
-        $('#new_phrase_score').watermark('Score');
-        $('#btn_add_phrase').button({
-            icons: {
-                primary: 'ui-icon-plus'
-            },
-            text: false
-        }).click(function () {
 
-            $('.phrase-remove:last').button({
-                icons: {
-                    primary: 'ui-icon-minus'
-                },
-                text: false
-            });
 
-        });
-        $('.phrase-remove').button({
-            icons: {
-                primary: 'ui-icon-minus'
-            },
-            text: false
-        });
-        $('#btn_save').button().click(function () {
-
-            index.postProfileQuery();
+    /*---------------------Initialization-----------------------*/
+    initializeStates: function (data) {
+        index.dataModel.states = data;
+        ko.mapping.fromJS(index.dataModel, index.statesMapping, index.viewModel);
+        ko.applyBindingsToNode(document.getElementById("states"), { template: { name: 'states-template' } }, index.viewModel.states);
+        $.event.trigger({
+            type: 'viewModelUpdated',
+            message: { root: 'states' },
+            time: new Date()
         });
     },
-    /*---------------------Initialization-----------------------*/
-    init: function () {
-        index.getProfileQuery(function () {
-            index.getStates(function () {
-                index.onDataReceived();
-            });
+    initializeProfileQueries:function(data){
+        index.dataModel.profileQueries = data;
+        ko.mapping.fromJS(index.dataModel, index.profileQueriesMapping, index.viewModel);
+        ko.applyBindingsToNode(document.getElementById("profileQueries"), { template: { name: 'profileQueries-template' } }, index.viewModel.profileQueries);
+        $.event.trigger({
+            type: 'viewModelUpdated',
+            message: { root: 'profileQueries' },
+            time: new Date()
         });
+    },
+    initializeProfileQuery:function(data){
+        index.dataModel.profileQuery = data;
+        ko.mapping.fromJS(index.dataModel, index.profileQueryMapping, index.viewModel);
+        ko.mapping.fromJS(index.dataModel, index.phrasesMapping, index.viewModel);
+        ko.applyBindingsToNode(document.getElementById("profileQuery"), { template: { name: 'profileQuery-template' } }, index.viewModel.profileQuery);
+        ko.applyBindingsToNode(document.getElementById("newPhrase"), { template: { name: 'newPhrase-template' } }, index.viewModel.newPhrase);
+        ko.applyBindingsToNode(document.getElementById("phrases"), { template: { name: 'phrases-template' } }, index.viewModel.profileQuery().phrases)
+        $.event.trigger({
+            type: 'viewModelUpdated',
+            message: { root: 'profileQuery'},
+            time: new Date()
+        });
+
+    },
+
+    init: function () {
+        index.viewModel = ko.mapping.fromJS(index.dataModel);
+        $(document).bind('dataReceived', function (e) {
+            switch (e.message.apiMethod) {
+                case 'states':
+                    index.initializeStates(e.message.data);
+                    break;
+                case 'profileQueries':
+                    index.initializeProfileQueries(e.message.data);
+                    break;
+                case 'profileQuery':
+                    index.initializeProfileQuery(e.message.data);
+                    break;
+                default: break;
+            }
+        });
+
+        
     }
 
 }

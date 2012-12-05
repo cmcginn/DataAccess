@@ -3,17 +3,60 @@
 }
 @section scripts
 {
+    
+    <script src="~/Scripts/application/api.js"></script>
+    <script src="~/Scripts/fi.js"></script>
+@*    
     <script src="~/Scripts/application/index.js"></script>
     <script src="~/Scripts/jquery.watermark.min.js"></script>
+    <script src="~/Scripts/application/index-ui.js"></script>*@
+
 }
-@*<style type="text/css">
-    .ui-accordion-content .ui-helper-reset .ui-widget-content .ui-corner-bottom .ui-accordion-content-active {
-        height:100%;
-    }
-</style>*@
+@*<script type="text/html" id="profileQueries-template">
+    <div data-bind="foreach:$data">
+        <div class="ym-grid">
+            <div class="ym-gl ym-g20">
+                <span data-bind="text:name"></span>
+            </div>
+            <div class="ym-gl ym-g20">
+                <button class="select_profile_query" data-bind="attr:{'id':id}"></button>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="newPhrase-template">
+    <div class="ym-grid">
+        <div class="ym-gl ym-g50">
+            <input type="text" id="new_phrase" data-bind="value:value" />
+        </div>
+        <div class="ym-gl ym-g25">
+            <input type="text" id="new_phrase_score" data-bind="value:score" />
+        </div>
+        <div class="ym-gl ym-g25">
+            <button type="button" id="btn_add_phrase" data-bind="click:function(){index.addPhrase(newPhrase)}" />
+        </div>
+    </div>
+</script>
+<script type="text/html" id="phrases-template">
+    <div data-bind="foreach:$data">
+        <div class="ym-grid" data-bind="if:selected">
+            <div class="ym-gl ym-g25"><span data-bind="text:value"></span></div>
+            <div class="ym-gl ym-g25"><span data-bind="text:score"></span></div>
+            <div class="ym-gl  ym-g25">
+                <button class="phrase-remove" data-bind="click:function(){index.removePhrase($data)}"></button>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="profileQuery-template">
+    <div>
+        <div>
+            <input id="profile_query_name" type="text" data-bind="value:name" />
+        </div>
+    </div>
+</script>
 <script type="text/html" id="cities-template">
     <div data-bind="foreach:cities" class="cities">
-
         <div class="ym-gl ym-g25">
             <div class="ym-grid">
                 <div class="ym-gl ym-g20">
@@ -29,8 +72,8 @@
     </div>
 </script>
 <script id="states-template" type="text/html">
-    <div data-bind="foreach:states">
-        <div class="state ym-grid">
+    <div data-bind="foreach:$data">
+        <div class="state">
             <h1 data-bind="click:selected"><span style="padding-left: 15px" data-bind="text:name"></span></h1>
             <div class="content" data-bind="attr:{'data-code':code}">
                 <div style="width: 100%; height: 50px">
@@ -42,36 +85,25 @@
         </div>
     </div>
 </script>
-<div class="ym-grid">
-    <div class="ym-gr ym-g20">
-        <button id="btn_save">Save</button>
-    </div>
-</div>
-<div data-bind="with:profileQuery">
-    <div>
-        <input id="profile_query_name" type="text" data-bind="value:name" />
-    </div>
-    <div>
+<div id="index">
+    <div id="new_query">
         <div class="ym-grid">
-            <div class="ym-gl ym-g50">
-                <input type="text" id="new_phrase" data-bind="value:$parent.newPhrase.value" />
-            </div>
-            <div class="ym-gl ym-g25">
-                <input type="text" id="new_phrase_score" data-bind="value:$parent.newPhrase.score"/>
-            </div>
-            <div class="ym-gl ym-g25">
-                <button type="button" id="btn_add_phrase" data-bind="click:function(){index.addPhrase($parent.newPhrase)}" />
+            <div class="ym-gr ym-g20">
+                <button id="btn_save">Save</button>
             </div>
         </div>
-        <div data-bind="foreach:phrases">
-            <div class="ym-grid" data-bind="if:selected">
-            <div class="ym-gl ym-g25"><span data-bind="text:value"></span></div>
-            <div class="ym-gl ym-g25"><span data-bind="text:score"></span></div>
-                <div class="ym-gl  ym-g25">
-                    <button class="phrase-remove" data-bind="click:function(){index.removePhrase($data)}"></button>
-                </div>
-            </div>
-        </div>
+
+
     </div>
+
+    <div id="profileQueries"></div>
+    <div id="profileQuery"></div>
+    <div id="newPhrase"></div>
+    <div id="phrases"></div>
+
+
 </div>
-<div id="states" data-bind="template:{name:'states-template'}"></div>
+
+<div>
+    <div id="states"></div>
+</div>*@

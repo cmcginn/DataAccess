@@ -152,6 +152,7 @@
     <Compile Include="Controllers\LocationsController.cs" />
     <Compile Include="Controllers\StateProvincesController.cs" />
     <Compile Include="Controllers\UserProfileQueriesController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

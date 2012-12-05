@@ -24,9 +24,7 @@ namespace DataAccess.Raven.Services
         }
 
 
-        #region ProfileQueries
-
-        #endregion
+     
 
         #region Locations
         public IQueryable<Location> Locations()
@@ -58,10 +56,12 @@ namespace DataAccess.Raven.Services
         }
         #endregion
 
-        #region Profile Queries
+        #region ProfileQueries
         public IQueryable<ProfileQuery> ProfileQueries()
         {
-            throw new NotImplementedException();
+            var documentStore = GetDocumentStore();
+            var session = documentStore.OpenSession();
+            return session.Advanced.LuceneQuery<ProfileQuery>().SelectFields<ProfileQuery>(new string[] {"Id","UserId","Name" }).AsQueryable();
         }
 
         public ProfileQuery ProfileQuery(string id)
