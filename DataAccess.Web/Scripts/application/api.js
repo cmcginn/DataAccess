@@ -22,5 +22,6 @@
                 api.get.onDataReceived('states', data, textStatus, jqXHR);
             });
         }
+       
     }
 }

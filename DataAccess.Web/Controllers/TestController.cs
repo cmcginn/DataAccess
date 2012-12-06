@@ -16,5 +16,13 @@ namespace DataAccess.Web.Controllers
             return View();
         }
 
+        public ActionResult Api()
+        {
+            return View();
+        }
+        public ActionResult ViewModels()
+        {
+            return View();
+        }
     }
 }

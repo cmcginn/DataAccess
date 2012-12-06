@@ -319,6 +319,7 @@
     <Content Include="Content\yaml\screen\typography.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\fi.api.js" />
     <Content Include="Scripts\fi.viewmodels.js" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\application\api.js" />
@@ -348,7 +349,8 @@
     <Content Include="Scripts\knockout.validation.debug.js" />
     <Content Include="Scripts\knockout.validation.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
-    <Content Include="Scripts\tests\fiTests.js" />
+    <Content Include="Scripts\tests\fi.api.tests.js" />
+    <Content Include="Scripts\tests\fi.viewmodels.tests.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -390,6 +392,8 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Scripts\qunit-1.10.0.js" />
+    <Content Include="Views\Test\Api.cshtml" />
+    <Content Include="Views\Test\ViewModels.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
