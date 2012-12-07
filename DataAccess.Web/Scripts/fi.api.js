@@ -1,31 +1,53 @@
 ﻿$(function () {
-
+    var onDataReceived = function (apiMethod, data, textStatus, jqXHR) {
+        $.event.trigger({
+            type: 'dataReceived',
+            message: { apiMethod: apiMethod, data: data, textStatus: textStatus, jqXHR: jqXHR },
+            time: new Date()
+        });
+    }
+    var onDataPosted = function (apiMethod, data, textStatus, jqXHR) {
+        $.event.trigger({
+            type: 'dataPosted',
+            message: { apiMethod: apiMethod, data: data, textStatus: textStatus, jqXHR: jqXHR },
+            time: new Date()
+        });
+    }
     var get = {
-        onDataReceived: function (apiMethod, data, textStatus, jqXHR) {
-            $.event.trigger({
-                type: 'dataReceived',
-                message: { apiMethod: apiMethod, data: data, textStatus: textStatus, jqXHR: jqXHR },
-                time: new Date()
-            });
-        },
+       
         profileQuery: function (id) {
             $.getJSON(apiHost + '/UserProfileQueries?id=' + id + '&callback=?', null, function (data, textStatus, jqXHR) {
-                get.onDataReceived('profileQuery', data, textStatus, jqXHR);
+                onDataReceived('profileQuery', data, textStatus, jqXHR);
             });
         },
         states: function () {
             $.getJSON(apiHost + '/StateProvinces?callback=?', null, function (data, textStatus, jqXHR) {
-                get.onDataReceived('states', data, textStatus, jqXHR);
+                onDataReceived('states', data, textStatus, jqXHR);
             });
         },
         locations: function (code) {
             $.getJSON(apiHost + '/Locations?$filter=startswith(Code,\'' + code + '\')&callback=?', null, function (data, textStatus, jqXHR) {
-                get.onDataReceived('locations', data, textStatus, jqXHR);
+                onDataReceived('locations', data, textStatus, jqXHR);
             });
         },
         cities: function (code) {
             $.getJSON(apiHost + '/Locations?$filter=startswith(Code,\'' + code + '\') and length(Code) gt 4&callback=?', null, function (data, textStatus, jqXHR) {
-                get.onDataReceived('cities', data, textStatus, jqXHR);
+                onDataReceived('cities', data, textStatus, jqXHR);
+            });
+        }
+
+    
+    }
+    var post = {
+        profileQuery: function (item) {
+            $.ajax({
+                type: 'POST',
+                url: apiHost + '/UserProfileQueries',
+                data: item,
+                dataType:'json',
+                success: function (data, textStatus, jqXHR) {
+                    onDataPosted('profileQuery', data, textStatus, jqXHR);
+                }
             });
         }
     }
@@ -41,6 +63,11 @@
                 selected: false
             }
         };
+        function profileQueryModel(data) {
+            fi.api.profileQuery.id = data.id;
+            fi.api.profileQuery.name = data.name;
+            fi.api.profileQuery.userId = data.userId;
+        }
         //city model
         cities = [];
         city = function (data) {
@@ -51,6 +78,7 @@
                 selected: false
             }
         };
+        profileQuery = {};
         $(document).bind('dataReceived', function (apiMethod) {
 
             switch (apiMethod.message.apiMethod) {
@@ -73,19 +101,42 @@
                         message: { textStatus: apiMethod.message.textStatus }
                     });
                     break;
+                case 'profileQuery':
+                    profileQuery = new profileQueryModel(apiMethod.message.data);
+                    $.event.trigger({
+                        type: 'profileQueryReceived',
+                        message: { textStatus: apiMethod.message.textStatus }
+                    });
+                    break;
                 default:
                     break;
             }
 
 
         });
+        $(document).bind('dataPosted', function (event) {
+            switch (event.message.apiMethod) {
+                case 'profileQuery':
+                    profileQuery = profileQueryModel(event.message.data);
+                    $.event.trigger({
+                        type: 'profileQueryPosted',
+                        message: { textStatus: event.message.textStatus },
+                        time: new Date()
+                    });
+                    break;
+                default:
+                    break;
+            }
+        });
         return {
 
             getNewProfileQuery: function () { get.profileQuery(null) },
+            saveProfileQuery: function () { post.profileQuery(fi.api.profileQuery) },
             getStates: get.states,
             getCities: get.cities,
             states: states,
-            cities:cities
+            cities: cities,
+            profileQuery:profileQuery
         }
     }()
 });

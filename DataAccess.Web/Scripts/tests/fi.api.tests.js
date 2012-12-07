@@ -3,16 +3,18 @@
     test("Creation", function () {
         ok(fi.api, "api exists");
     });
+/*---------------------------GETS--------------------------*/
+
+   
     test("Get New Query Profile", function () {
-        var myData = null;
-        $(document).bind('dataReceived', function (apiMethod) {
-            myData = apiMethod.message;
+     
+        $(document).bind('profileQueryReceived', function (apiMethod) {    
             $(document).unbind(apiMethod);
         });
         stop();
         fi.api.getNewProfileQuery();
         setTimeout(function () {
-            ok(myData != null, "Date returned");
+            ok(fi.api.profileQuery != null, "Date returned");
             start();
         }, 3500);
     });
@@ -26,7 +28,7 @@
         setTimeout(function () {        
             equal(fi.api.states[0].code, "USAK", "USAK Expected");
             start();
-        }, 3500);
+        }, 5500);
     });
     test("Get Cities for State", function () {
         var selectedStateCode = 'USFL';
@@ -39,5 +41,32 @@
         setTimeout(function () {
             equal(fi.api.cities[0].name, 'Gainesville');
             start();
+        }, 5500);
+    });
+/*---------------------------POSTS--------------------------*/
+    test("Post Profile Query", function () {
+       
+        $(document).bind('profileQueryReceived', function (apiMethod) {
+            $(document).unbind(apiMethod);
+        });
+        stop();
+        fi.api.getNewProfileQuery();
+        setTimeout(function () {
+            ok(fi.api.profileQuery != null, "Date returned");
+            start();
+            $(document).bind('profileQueryPosted', function (event) {
+                $(document).unbind(event);
+            });
+            stop();
+            fi.api.saveProfileQuery();
+            setTimeout(function () {
+                console.log(fi.api.profileQuery);
+                ok(fi.api.profileQuery.id != null,"Profile Query Id is Null");
+                start();
+            }, 4500);
+
         }, 3500);
+
+          
+
     });
