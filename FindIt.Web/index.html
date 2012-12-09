@@ -10,6 +10,7 @@
         .script("http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js").wait()
         .script("http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.20/jquery-ui.min.js")
         .script("scripts/vendor/knockout-2.2.0.debug.js")
+        .script("scripts/vendor/knockout.mapping-latest.debug.js")
         .script("scripts/vendor/jquery.cookie.js")
         .script("scripts/vendor/jquery.blockUI.js")
         .script("scripts/vendor/jquery.hotkeys.js")
@@ -19,6 +20,11 @@
         .script("scripts/vendor/raphael-min.js")
         .script("scripts/vendor/g.raphael-min.js")
         .script("scripts/vendor/g.line-min.js")
+        .script("scripts/fi.api.js")
+        .script("scripts/viewmodel/fi.model.common.js")
+        .script("scripts/viewmediator/fi.mediator.common.js")
+        .script("scripts/viewmodel/fi.model.user-profile-query.js")
+        .script("scripts/viewmediator/fi.mediator.user-profile-query.js")
         .script("scripts/application.js").wait(function () {
             // When ALL scripts have been loaded AND executed:
             InitializeApplication();
@@ -27,6 +33,13 @@
     <title></title>
 </head>
 <body>
-
+    <section id="user-profile-query-view">
+        <label for="profile-query-name">Name</label>
+        <br />
+        <input id="profile-query-name" />
+        <br />
+        <div id="profile-query-keywords"></div>
+        <div id="profile-query-locations"></div>
+    </section>
 </body>
 </html>

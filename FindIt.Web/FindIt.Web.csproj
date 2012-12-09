@@ -57,27 +57,53 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\application.css" />
+    <Content Include="css\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="css\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="css\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="css\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="css\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="css\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="css\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="css\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="css\images\ui-icons_222222_256x240.png" />
+    <Content Include="css\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="css\images\ui-icons_454545_256x240.png" />
+    <Content Include="css\images\ui-icons_888888_256x240.png" />
+    <Content Include="css\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="css\jquery-ui-1.9.0.custom.css" />
+    <Content Include="css\jquery-ui-1.9.0.custom.min.css" />
     <Content Include="index.html" />
-    <Content Include="Scripts\application.js" />
-    <Content Include="Scripts\Vendor\g.line-min.js" />
-    <Content Include="Scripts\Vendor\g.raphael-min.js" />
-    <Content Include="Scripts\Vendor\jquery.blockUI.js" />
-    <Content Include="Scripts\Vendor\jquery.cookie.js" />
-    <Content Include="Scripts\Vendor\jquery.hotkeys.js" />
-    <Content Include="Scripts\Vendor\jquery.maskedinput-1.3.min.js" />
-    <Content Include="Scripts\Vendor\jquery.validate.min.js" />
-    <Content Include="Scripts\Vendor\jstorage.min.js" />
-    <Content Include="Scripts\Vendor\knockout-2.2.0.debug.js" />
-    <Content Include="Scripts\Vendor\knockout-2.2.0.js" />
-    <Content Include="Scripts\Vendor\LAB.min.js" />
-    <Content Include="Scripts\Vendor\modernizr.custom.min.js" />
-    <Content Include="Scripts\Vendor\raphael-min.js" />
+    <Content Include="scripts\application.js" />
+    <Content Include="scripts\fi.api.js" />
+    <Content Include="scripts\knockout.activity.js" />
+    <Content Include="scripts\knockout.asyncCommand.js" />
+    <Content Include="scripts\knockout.dirtyFlag.js" />
+    <Content Include="scripts\vendor\g.line-min.js" />
+    <Content Include="scripts\vendor\g.raphael-min.js" />
+    <Content Include="scripts\vendor\jquery.blockUI.js" />
+    <Content Include="scripts\vendor\jquery.cookie.js" />
+    <Content Include="scripts\vendor\jquery.hotkeys.js" />
+    <Content Include="scripts\vendor\jquery.maskedinput-1.3.min.js" />
+    <Content Include="scripts\vendor\jquery.validate.min.js" />
+    <Content Include="scripts\vendor\jstorage.min.js" />
+    <Content Include="scripts\vendor\knockout-2.2.0.debug.js" />
+    <Content Include="scripts\vendor\knockout-2.2.0.js" />
+    <Content Include="scripts\vendor\knockout.mapping-latest.debug.js" />
+    <Content Include="scripts\vendor\knockout.mapping-latest.js" />
+    <Content Include="scripts\vendor\LAB.min.js" />
+    <Content Include="scripts\vendor\modernizr.custom.min.js" />
+    <Content Include="scripts\vendor\raphael-min.js" />
+    <Content Include="scripts\viewmediator\fi.mediator.user-profile-query.js" />
+    <Content Include="scripts\viewmodel\fi.model.common.js" />
+    <Content Include="scripts\viewmodel\fi.model.user-profile-query.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="scripts\viewmediator\fi.mediator.common.js" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

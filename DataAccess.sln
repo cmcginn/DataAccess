@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.Api.v1", "DataAc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindIt.Web", "FindIt.Web\FindIt.Web.csproj", "{586C21C1-DA34-463E-8A29-5411E869CE9D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindIt.Spa", "FindIt.Spa\FindIt.Spa.csproj", "{BD7F4C87-8E4D-4CC9-95D2-B7BDBC8A3BC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{586C21C1-DA34-463E-8A29-5411E869CE9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{586C21C1-DA34-463E-8A29-5411E869CE9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{586C21C1-DA34-463E-8A29-5411E869CE9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD7F4C87-8E4D-4CC9-95D2-B7BDBC8A3BC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD7F4C87-8E4D-4CC9-95D2-B7BDBC8A3BC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD7F4C87-8E4D-4CC9-95D2-B7BDBC8A3BC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD7F4C87-8E4D-4CC9-95D2-B7BDBC8A3BC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
