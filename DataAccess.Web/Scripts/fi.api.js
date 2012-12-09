@@ -56,10 +56,11 @@
         //state model
         states = [];
         state = function (data) {
-            return {
+            return {                
                 id: data.id,
                 code: data.code,
                 name: data.name,
+                cities:[],
                 selected: false
             }
         };
@@ -67,6 +68,7 @@
             fi.api.profileQuery.id = data.id;
             fi.api.profileQuery.name = data.name;
             fi.api.profileQuery.userId = data.userId;
+            fi.api.profileQuery.locations = data.locations;
         }
         //city model
         cities = [];

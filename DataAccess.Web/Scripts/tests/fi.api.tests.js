@@ -1,4 +1,4 @@
-﻿
+﻿var timeout = 1000;
     module("FI API");
     test("Creation", function () {
         ok(fi.api, "api exists");
@@ -16,7 +16,7 @@
         setTimeout(function () {
             ok(fi.api.profileQuery != null, "Date returned");
             start();
-        }, 3500);
+        }, timeout);
     });
     test("Get States", function () {
         var myData = null;
@@ -28,7 +28,7 @@
         setTimeout(function () {        
             equal(fi.api.states[0].code, "USAK", "USAK Expected");
             start();
-        }, 5500);
+        }, timeout);
     });
     test("Get Cities for State", function () {
         var selectedStateCode = 'USFL';
@@ -41,7 +41,7 @@
         setTimeout(function () {
             equal(fi.api.cities[0].name, 'Gainesville');
             start();
-        }, 5500);
+        }, timeout);
     });
 /*---------------------------POSTS--------------------------*/
     test("Post Profile Query", function () {
@@ -63,9 +63,9 @@
                 console.log(fi.api.profileQuery);
                 ok(fi.api.profileQuery.id != null,"Profile Query Id is Null");
                 start();
-            }, 4500);
+            }, 2000);
 
-        }, 3500);
+        }, 2000);
 
           
 

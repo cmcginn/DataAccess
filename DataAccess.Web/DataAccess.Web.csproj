@@ -321,6 +321,7 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\fi.api.js" />
     <Content Include="Scripts\fi.viewmodels.js" />
+    <Content Include="App_Readme\LABjs_README.md" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\application\api.js" />
     <Content Include="Scripts\application\common.js" />
@@ -348,7 +349,11 @@
     <Content Include="Scripts\knockout.mapping-latest.js" />
     <Content Include="Scripts\knockout.validation.debug.js" />
     <Content Include="Scripts\knockout.validation.js" />
+    <Content Include="Scripts\LAB-debug.min.js" />
+    <Content Include="Scripts\LAB.js" />
+    <Content Include="Scripts\LAB.min.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\modernizr-custom.min.js" />
     <Content Include="Scripts\tests\fi.api.tests.js" />
     <Content Include="Scripts\tests\fi.viewmodels.tests.js" />
     <Content Include="Web.config" />

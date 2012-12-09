@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="Scripts/Vendor/modernizr.custom.min.js"></script>
+    <script src="Scripts/Vendor/LAB.min.js"></script>
+
+    <script>
+        $LAB
+        .script("http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js").wait()
+        .script("http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.20/jquery-ui.min.js")
+        .script("Scripts/Vendor/knockout-2.2.0.debug.js")
+        .script("Scripts/Vendor/jquery.cookie.js")
+        .script("Scripts/Vendor/jquery.blockUI.js")
+        .script("Scripts/Vendor/jquery.hotkeys.js")
+        .script("Scripts/Vendor/jquery.maskedinput-1.3.min.js")
+        .script("Scripts/Vendor/jquery.validate.min.js")
+        .script("Scripts/Vendor/jstorage.min.js")
+        .script("Scripts/Vendor/raphael-min.js")
+        .script("Scripts/Vendor/g.raphael-min.js")
+        .script("Scripts/Vendor/g.line-min.js")
+        .script("Scripts/application.js").wait(function () {
+            // When ALL scripts have been loaded AND executed:
+            InitializeApplication();
+        });
+    </script>
+    <title></title>
+</head>
+<body>
+
+</body>
+</html>
